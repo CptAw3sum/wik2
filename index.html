@@ -1,4 +1,4 @@
-<html manifest="wik.manifest">
+<html manifest="wik.manifest1">
 
 <head>
     <meta charset="UTF-8">
@@ -10,6 +10,8 @@
         textarea {
             font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
             font-size: 20px;
+            /*color: #0F0;
+            background-color: #333;*/
         }
         
         textarea {
@@ -39,6 +41,7 @@
             width: 35px;
             height: 35px;
             text-align: center;
+            line-height: 35px;
             margin-left: 5px;
         }
     </style>
@@ -88,7 +91,8 @@
                 window.location.hash = pageName;
                 editor.value = pageContent();
                 document.getElementById('title').innerHTML = currentPage;
-                editor.blur();
+                //editor.blur();
+                editor.focus();
             }
 
             function pageContent() {
