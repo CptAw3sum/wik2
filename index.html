@@ -72,9 +72,14 @@
             }    
         },
         editor: document.getElementById('editor'),
-        enterPage: function(pageName) {
+        enterPage: function(pageName, noHistoryUpdate) {
             wik.currentPage = pageName;
-            window.location.hash = pageName;
+            if (noHistoryUpdate){
+                history.replaceState(undefined, undefined, "#" + pageName)
+            }
+            else {
+                window.location.hash = pageName;
+            }
             wik.editor.value = wik.pageContent();
             document.getElementById('title').innerHTML = wik.currentPage;
             //wik.editor.blur();
@@ -125,35 +130,28 @@
         followLink: function(e) {
             var linkUnderCursor = wik.linkUnderCursor()
             var isLinkEnter = (e.type == 'click' || e.keyCode == 13);
-            if (linkUnderCursor){
-                if (isLinkEnter) {
-                    e.preventDefault();
-                    if (linkUnderCursor.match(URL_REGEXP)) {
-                        window.location = linkUnderCursor;
-                    } else {
-                        wik.enterPage(linkUnderCursor);
-                    }
-                }
-                else if (!(e.keyCode > 36 && e.keyCode < 41)) { // not arrow keys
-                    wik.renameState = { original : linkUnderCursor}
+            if (linkUnderCursor && isLinkEnter) {
+                e.preventDefault();
+                if (linkUnderCursor.match(URL_REGEXP)) {
+                    window.location = linkUnderCursor;
+                } else {
+                    wik.enterPage(linkUnderCursor);
                 }
             }
-
         },
-        completeRename : function(){
-            if (wik.renameState){
-                var linkUnderCursor = wik.linkUnderCursor()
-                var original = wik.renameState.original;
-                console.log('Renaming ' + original + ' to ' + linkUnderCursor)
-                wik.renameState = null;
-                for (page in wik.allPages){
-                    var data = wik.allPages[page];
-                    var re = new RegExp('\(' + original + '\)', 'g')
-                    data = data.replace(re, linkUnderCursor);
-                    wik.allPages[page] = data;
-                }
+        rename : function(newPageName){
+            console.log('Renaming ' + wik.currentPage  + ' to ' + newPageName)
+            var pageData = wik.allPages[wik.currentPage];
+            wik.allPages[newPageName] = pageData;
+            delete wik.allPages[wik.currentPage];
+            for (page in wik.allPages){
+                var data = wik.allPages[page];
+                var re = new RegExp('\(' + wik.currentPage + '\)', 'g')
+                data = data.replace(re, newPageName);
+                wik.allPages[page] = data;
             }
             wik.save()
+            wik.enterPage(newPageName, true)
         }
     }
 
@@ -162,7 +160,7 @@
         wik.enterPage('Home');
     });
 
-    wik.editor.onkeyup = wik.completeRename;
+    wik.editor.onkeyup = wik.save;
     wik.editor.onkeydown = wik.followLink;
     wik.editor.onclick = wik.followLink;
 
