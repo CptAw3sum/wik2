@@ -1,2 +1,5 @@
 - Icons look rubbish on FF
 - Namespaces? Could use url path.
+
+
+- Rename should be an action.
