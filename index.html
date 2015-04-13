@@ -92,12 +92,15 @@
                 return wik.allPages[wik.currentPage] || '';
             }
         },
-        save: function() {
+        saveEditorContent: function() {
             if (wik.currentPage == 'AllContent') {
                 wik.allPages = JSON.parse(wik.editor.value);
             } else {
                 wik.allPages[wik.currentPage] = editor.value;
             }
+            wik.save()
+        },
+        save: function(){
             localStorage.setItem('wik.data', JSON.stringify(wik.allPages));
         },
         linkUnderCursor: function(){
@@ -143,13 +146,13 @@
             console.log('Renaming ' + wik.currentPage  + ' to ' + newPageName)
             var pageData = wik.allPages[wik.currentPage];
             wik.allPages[newPageName] = pageData;
-            delete wik.allPages[wik.currentPage];
             for (page in wik.allPages){
                 var data = wik.allPages[page];
                 var re = new RegExp('\(' + wik.currentPage + '\)', 'g')
                 data = data.replace(re, newPageName);
                 wik.allPages[page] = data;
             }
+            delete wik.allPages[wik.currentPage]
             wik.save()
             wik.enterPage(newPageName, true)
         }
@@ -160,7 +163,7 @@
         wik.enterPage('Home');
     });
 
-    wik.editor.onkeyup = wik.save;
+    wik.editor.onkeyup = wik.saveEditorContent;
     wik.editor.onkeydown = wik.followLink;
     wik.editor.onclick = wik.followLink;
 
