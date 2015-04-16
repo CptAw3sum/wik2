@@ -2,4 +2,6 @@
 - Namespaces? Could use url path.
 
 
-- Rename should be an action.
+- Action menu
+
+- Load test

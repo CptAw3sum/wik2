@@ -124,11 +124,13 @@
         save: function(){
             localStorage.setItem('wik.data', JSON.stringify(wik.allPages));
         },
-        linkUnderCursor: function(){
+        parseLinks: function(){
             var linkUnderCursor = null;
             var text = wik.editor.value;
             var cursor = wik.editor.selectionStart;
             var linkStart, linkEnd;
+            var links = [];
+            var link;
             for (var i = 0; i < text.length; i++) {
                 var c = text.charAt(i);
                 if (c == '[' || c == '(') {
@@ -137,22 +139,26 @@
                 if (c == ']' || c == ')') {
                     if (linkStart != null) {
                         linkEnd = i;
+                        link = text.substring(linkStart + 1, linkEnd);
+                        links.push(link)
                     }
-                    if (linkStart < cursor && cursor <= linkEnd) {
-                        break;
-                    } else {
-                        linkStart = null;
-                        linkEnd = null;
+                    var cursorWithinLink = linkStart < cursor && cursor <= linkEnd;
+                    if (cursorWithinLink) {
+                        links.current = link;
                     }
                 }
             }
-            if (linkStart != null && linkEnd != null) {
-                linkUnderCursor = text.substring(linkStart + 1, linkEnd);
-            }
-            return linkUnderCursor;
+            return links;
+        },
+        updateLinks: function(){
+            var links = wik.parseLinks();
+            console.log(links);
+            wik.saveEditorContent();
         },
         followLink: function(e) {
-            var linkUnderCursor = wik.linkUnderCursor()
+            wik.saveEditorContent();
+            var links = wik.parseLinks();
+            var linkUnderCursor = links.current;
             var isLinkEnter = (e.type == 'click' || e.keyCode == 13);
             if (linkUnderCursor && isLinkEnter) {
                 e.preventDefault();
@@ -177,9 +183,9 @@
                 data = data.replace(re, newPageName);
                 wik.allPages[page] = data;
             }
-            delete wik.allPages[wik.currentPage]
-            wik.save()
-            wik.enterPage(newPageName, true)
+            delete wik.allPages[wik.currentPage];
+            wik.save();
+            wik.enterPage(newPageName, true);
         }
     }
 
@@ -188,7 +194,7 @@
         wik.enterPage('Home');
     });
 
-    wik.editor.onkeyup = wik.saveEditorContent;
+    wik.editor.onkeyup = wik.updateLinks;
     wik.editor.onkeydown = wik.followLink;
     wik.editor.onclick = wik.followLink;
 
