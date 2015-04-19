@@ -5,3 +5,12 @@
 - Action menu
 
 - Load test
+
+
+
+---
+
+
+strategy for updating the links map
+
+- 

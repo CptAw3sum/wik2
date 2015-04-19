@@ -1,0 +1,24 @@
+_Home
+    A little house in the middle of a forest in the world of @Uthur.
+
+    _Hall
+        Door to _YourGarden, locked
+
+    _Living Area
+        A _CraftingTable
+            Wooden handle
+
+
+
+
+
+_Player
+    _Purse
+        21 @SilverCoin
+
+
+_Uthur
+
+_SilverCoin
+
+    A small coin 
