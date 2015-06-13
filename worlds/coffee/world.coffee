@@ -1,5 +1,5 @@
 class Thing
-    constructor: (@id, @c) ->
+    constructor: (@id) ->
 
     find: (id) -> 
         (i for i in this.c when i.id = id)[0]
@@ -14,33 +14,38 @@ class FirePlace extends Thing
         this.lit = true
         'The fire is lit'
 
-w = []
-
-O = (id, c) -> 
-    t = o(id, c)
-    w.push t
-
-o = (id, c) -> 
-    new Thing(id, c)
 
 
-
-O 'Home', [
-    o 'Living Room', [
-        new FirePlace '', [
-            new Log
-            new Log
-        ]
-    ]
-    o 'Hall'
-
-]
 
 
 ###########
 # Framework
 ###########
 
+w = []
+
+o = undefined
+
+obj = (id) -> 
+    o = new Thing
+    w.push o
+
+d = (text) ->
+    o.d = text
 
 find = (id) -> 
     (i for i in w when i.id = id)[0]
+
+
+o = new Thing 'Home'
+o.d = 'A little house'
+o.add 
+
+
+
+d 'A little house'
+sub 'Living room'
+sub new FirePlace
+sub new Log
+sub new Log
+sub new Log

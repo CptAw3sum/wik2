@@ -1,0 +1,12 @@
+Glotto
+    is a: guard troll
+    location: Armoury
+Armoury
+    text: "A room full of weapons"
+    door: Throne Room
+        is a: LockableDoor
+LockableDoor
+    is a: Type
+    field: locked
+        is a: boolean
+
